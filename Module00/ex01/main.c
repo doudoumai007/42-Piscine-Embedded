@@ -7,8 +7,7 @@ int main()
 	// Put PB0 as output
 	DDRB |= (1 << PB0);
 
-	// pull-up resistor on: HIGH 1
-	// pull-up resistor off: LOW 0
+	// Level: HIGH 1; LOW 0
 	PORTB |= (1 << PB0);
 
 	while (1)

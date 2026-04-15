@@ -23,23 +23,20 @@ int main()
 
 	while (1)
 	{
-		_delay_ms(20);
-
 		// button: pressed 0; released 1;
 		uint8_t SW1_current = (PIND & (1 << PD2));
 		uint8_t SW2_current = (PIND & (1 << PD4));
 
+		// Debounce & get button status again
+		_delay_ms(20);
+		SW1_current = (PIND & (1 << PD2));
+		SW2_current = (PIND & (1 << PD4));
+
 		// Last state: pressed mode 0; realsed mode 1;
 		if (SW1_state && !SW1_current)
-		{
-			_delay_ms(200);
 			value++;
-		}
 		else if (SW2_state && !SW2_current)
-		{
-			_delay_ms(200);
 			value--;
-		}
 
 		// Record current mode
 		SW1_state = SW1_current;

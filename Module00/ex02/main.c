@@ -12,6 +12,7 @@ int main()
 	//	0 & x → becomes 0
 	// 👉PD2 becomes 0, the others dont' change
 	DDRD &= ~(1 << PD2);
+	PORTD |= (1 << PD2);
 
 	while (1)
 	{
