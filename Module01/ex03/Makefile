@@ -6,7 +6,7 @@ TARGET = main
 ELF = $(TARGET).elf
 HEX = $(TARGET).hex
 
-CFLAGS = -Wall -Wextra -Werror -DF_CPU=$(F_CPU) -mmcu=atmega328p
+CFLAGS = -Wall -Wextra -Werror -DF_CPU=$(F_CPU) -mmcu=atmega328p -Os
 
 all: hex flash
 
