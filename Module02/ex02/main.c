@@ -2,7 +2,8 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
-void	uart_tx(char c)
+// Blocking, polling-based UART
+void	uart_tx(unsigned char c)
 {
 	// UDREn: Data Register Empty
 	// it indicates whether the transmit buffer is ready to receive new data
@@ -14,6 +15,15 @@ void	uart_tx(char c)
 	UDR0 = c;
 }
 
+char uart_rx(void)
+{
+	// RXCn: USART Receive Complete
+	// 1: there are unread data in the receive buffer；
+	// 0: the receive buffer is empty --P187
+	while (!(UCSR0A & (1 << RXC0)));
+
+	return (UDR0);
+}
 
 void	uart_init()
 {
@@ -29,12 +39,12 @@ void	uart_init()
 	// 8 low bits
 	UBRR0L = ubrr;
 
-	// Set Double Speed asynchronous mode --P182
+	// Set Double Speed asynchronous mode --P182-/*-
 	// Control and status register
 	UCSR0A |= (1 << U2X0);
 
-	// 🟢 Enable the Transmitter
-	UCSR0B = (1 << TXEN0);
+	// 🟢 Enable the Transmitter and Receiver --P188
+	UCSR0B = (1 << TXEN0) | (1 << RXEN0);
 
 	// 🟢 Set Frame Format : 8N1 -> Data bits 8 + Parity bit none + Stop bits 1 --P183
 	// We can send Frames with 5 to 8 bits, USART Character Size is controled by 3 bits
@@ -47,10 +57,12 @@ int	main()
 {
 	uart_init();
 
+	unsigned char	c;
+
 	while (1)
 	{
-		uart_tx('Z');
-		_delay_ms(1000);
+		c = uart_rx();
+		uart_tx(c);
 	}
 }
 

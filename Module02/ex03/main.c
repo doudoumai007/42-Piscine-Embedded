@@ -2,7 +2,7 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
-void	uart_tx(char c)
+void	uart_tx(unsigned char c)
 {
 	// UDREn: Data Register Empty
 	// it indicates whether the transmit buffer is ready to receive new data
@@ -13,7 +13,6 @@ void	uart_tx(char c)
 	// 2 roles: transmit & receive
 	UDR0 = c;
 }
-
 
 void	uart_init()
 {
@@ -29,12 +28,13 @@ void	uart_init()
 	// 8 low bits
 	UBRR0L = ubrr;
 
-	// Set Double Speed asynchronous mode --P182
+	// Set Double Speed asynchronous mode --P182-/*-
 	// Control and status register
 	UCSR0A |= (1 << U2X0);
 
-	// 🟢 Enable the Transmitter
-	UCSR0B = (1 << TXEN0);
+	// 🟢 Enable the Transmitter and Receiver --P188
+	// 🟢 Enable Receive Complete Interrupt --P191
+	UCSR0B = (1 << TXEN0) | (1 << RXEN0) | (1 << RXCIE0);
 
 	// 🟢 Set Frame Format : 8N1 -> Data bits 8 + Parity bit none + Stop bits 1 --P183
 	// We can send Frames with 5 to 8 bits, USART Character Size is controled by 3 bits
@@ -43,15 +43,43 @@ void	uart_init()
 	UCSR0C = (1 << UCSZ00) | (1 << UCSZ01);
 }
 
+unsigned char	toggle_case(unsigned char c)
+{
+	if (c >= 'A' && c <= 'Z')
+		c += 32;
+	else if (c >= 'a' && c <= 'z')
+		c -= 32;
+	return (c);
+}
+
+// // Interrupt Service Routine
+// ISR(USART_RX_vect)
+// {
+// 	unsigned char c = UDR0;
+// 	c = toggle_case(c);
+// 	uart_tx(c);
+// }
+
+// (signal) put interrupt service routine
+__attribute__((signal))
+void USART_RX_vect(void)
+{
+	// Interrupt-driven receive, UDR0 has already accomplished reception
+	unsigned char c = UDR0;
+	c = toggle_case(c);
+	uart_tx(c);
+}
+
+
 int	main()
 {
 	uart_init();
 
-	while (1)
-	{
-		uart_tx('Z');
-		_delay_ms(1000);
-	}
+	// 🟢 Enable global interrpution --P20
+	// SREG: Status Register
+	SREG |= (1 << 7);
+
+	while (1);
 }
 
 // screen /dev/ttyUSB0 115200
