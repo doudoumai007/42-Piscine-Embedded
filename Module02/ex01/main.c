@@ -74,7 +74,7 @@ void	auto_interrupt()
 // (0x0016 (bytes)-> but 0x000B (word) in real， because in vector use word index = 2 bytes)
 // Link the fonciton to the interrupt's address
 // __attribute__((interrupt(0x000B)))
-//
+// Set Interrupt Service Routine
 __attribute__((signal))
 void TIMER1_COMPA_vect(void)
 {

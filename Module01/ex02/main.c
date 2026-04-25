@@ -3,7 +3,9 @@
 int	main()
 {
 	// duty cycle 10% 1Hz: turn on 100ms, turn off 900ms 
-
+	// PWM(Pulse Width Modulation)
+	// CR1(Input Capture Register)
+	
 	// In Timer1 there are 2 Output Compare channels: A B (OC1A / OC1B)
 	// OC1A is served on PB1
 	// The PB1 pin can serve as an external output for the Timer/Counter1 Compare Match A.
