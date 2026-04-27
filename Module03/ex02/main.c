@@ -62,7 +62,7 @@ void	init_rgb()
 	// Initializer duty cycle --P103
 	OCR0A = 0;
 	OCR0B = 0;
-	OCR2A = 0;
+	OCR2B = 0;
 }
 
 int	main()
@@ -70,7 +70,7 @@ int	main()
 	// Set LEDs as output
 	DDRD |= (1 << BLUE) | (1 << RED) | (1 << GREEN);
 
-	// Set interrupt timer
+	// Initializer LEDs mode
 	init_rgb();
 
 	uint8_t pos = 0;
