@@ -63,6 +63,8 @@ unsigned char	toggle_case(unsigned char c)
 // (signal) put interrupt service routine
 __attribute__((signal))
 void USART_RX_vect(void)
+// __attribute__ ((interrupt (0x012))) // USART, RX --P66 ?
+// void f2(void)
 {
 	// Interrupt-driven receive, UDR0 has already accomplished reception
 	unsigned char c = UDR0;
