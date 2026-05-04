@@ -60,7 +60,7 @@ void	adc_init()
 	// ADCL and ADCH (（ADC Data Register Low/ HIGH） --P259
 }
 
-uint8_t	read_adc(uint8_t channel)
+uint16_t	read_adc(uint8_t channel)
 {
 	// Enable channel 0/1/2 --P258
 	// (ADMUX & 0xF0) -> keep High 4-bit
@@ -77,9 +77,9 @@ uint8_t	read_adc(uint8_t channel)
 	uint8_t low = ADCL;
 	uint8_t high = ADCH;
 
-	uint16_t value = (high << 8) | low;
+	uint16_t value = (uint16_t)(high << 8) | low;
 
-	//Return 8-bit
+	//Return 16-bit
 	return (value);
 }
 

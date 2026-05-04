@@ -63,7 +63,7 @@ void	adc_init()
 	// ADCL and ADCH (（ADC Data Register Low/ HIGH） --P259
 }
 
-uint8_t	read_adc()
+uint16_t	read_adc()
 {
 	// // Enable channel 0/1/2 --P258
 	// // (ADMUX & 0xF0) -> keep High 4-bit
@@ -77,19 +77,22 @@ uint8_t	read_adc()
 	while (ADCSRA & (1 << ADSC));
 
 	// Read 8-low-bit and 8-high-bit
-	uint8_t low = ADCL;
-	uint8_t high = ADCH;
+	// uint8_t low = ADCL;
+	// uint8_t high = ADCH;
 
-	uint16_t value = (high << 8) | low;
+	// uint16_t value = (uint16_t)((high << 8) | low);
 
-	//Return 8-bit
-	return (value);
+	// //Return 16-bit
+	return (ADC);
 }
 
 void	print_decimal(uint16_t value)
 {
 	if (value == 0)
+	{
 		uart_tx('0');
+		return ;
+	}
 	// Max 1023 + '\0'
 	char buffer[5];
 	uint8_t i = 0;
@@ -110,7 +113,13 @@ int	main()
     while (1)
 	{
 		uint16_t value = read_adc();
-		print_decimal(value);
+		uint16_t offset = 353; // --P256 offset (23 celcius)
+		uint16_t t = 0;
+		if (value >= offset)
+			t = (value - offset) * 100 / 110  + 23; // -- P256 slope (66 /60)
+		else
+			t = (offset - value) * 100 / 110  + 23;
+		print_decimal(t);
 		uart_tx('\n');
 		uart_tx('\r');
 		_delay_ms(20);
