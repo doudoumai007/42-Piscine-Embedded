@@ -86,7 +86,10 @@ uint16_t	read_adc(uint8_t channel)
 void	print_decimal(uint16_t value)
 {
 	if (value == 0)
+	{
 		uart_tx('0');
+		return ;
+	}
 	// Max 1023 + '\0'
 	char buffer[5];
 	uint8_t i = 0;

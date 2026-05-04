@@ -77,13 +77,13 @@ uint16_t	read_adc()
 	while (ADCSRA & (1 << ADSC));
 
 	// Read 8-low-bit and 8-high-bit
-	// uint8_t low = ADCL;
-	// uint8_t high = ADCH;
+	uint8_t low = ADCL;
+	uint8_t high = ADCH;
 
-	// uint16_t value = (uint16_t)((high << 8) | low);
+	uint16_t value = (uint16_t)(high << 8) | low;
 
-	// //Return 16-bit
-	return (ADC);
+	//Return 16-bit
+	return (value);
 }
 
 void	print_decimal(uint16_t value)
